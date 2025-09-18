@@ -74,8 +74,8 @@ import "./globals.css";
 import { Suspense } from "react";
 
 export const metadata = {
-  title: "AnimeStream Demo",
-  description: "Demo anime streaming built with Next.js",
+  title: "AnimeStream",
+  description: "Watch Anime Online",
 };
 
 export default function RootLayout({
