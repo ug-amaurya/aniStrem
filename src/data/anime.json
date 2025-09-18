@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "title": "Sample Anime One",
+    "description": "A thrilling journey of heroes and legends.",
+    "cover": "/vercel.svg",
+    "episodes": [
+      {
+        "id": 1,
+        "title": "The Beginning",
+        "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        "poster": "/next.svg"
+      },
+      {
+        "id": 2,
+        "title": "Rising Action",
+        "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        "poster": "/next.svg"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Sample Anime Two",
+    "description": "Mysteries unravel in a world of magic.",
+    "cover": "/globe.svg",
+    "episodes": [
+      {
+        "id": 1,
+        "title": "Awakening",
+        "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        "poster": "/vercel.svg"
+      }
+    ]
+  }
+]
