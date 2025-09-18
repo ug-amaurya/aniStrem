@@ -2,6 +2,7 @@ import VideoPlayer from "../../../../components/VideoPlayer";
 import VideoSourceForm from "../../../../components/VideoSourceForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
 
 async function fetchAnimeDetails(malId: string) {
   const res = await fetch(
@@ -50,7 +51,9 @@ export default async function WatchPage({
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
-      <VideoSourceForm />
+      <Suspense>
+        <VideoSourceForm />
+      </Suspense>
       <div className="bg-black rounded shadow">
         {src ? (
           <VideoPlayer

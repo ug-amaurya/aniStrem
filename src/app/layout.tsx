@@ -71,6 +71,7 @@
 // }
 import RootLayoutClient from "@/components/ThemeProvider";
 import "./globals.css";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "AnimeStream Demo",
@@ -82,5 +83,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <RootLayoutClient>{children}</RootLayoutClient>;
+  return (
+    <Suspense>
+      <RootLayoutClient>{children}</RootLayoutClient>
+    </Suspense>
+  );
 }
