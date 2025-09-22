@@ -185,7 +185,7 @@
   }
 }
 .loader {
-  color: #0f1328;
+  color: var(--color-foreground);
   width: 6px;
   aspect-ratio: 1;
   border-radius: 50%;

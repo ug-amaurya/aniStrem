@@ -3,6 +3,7 @@ import VideoSourceForm from "../../../../components/VideoSourceForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
+import BackButton from "../../../../components/BackButton";
 
 async function fetchAnimeDetails(malId: string) {
   const res = await fetch(
@@ -49,12 +50,22 @@ export default async function WatchPage({
   const nextEpisode = hasNextWhenKnown ? currentEpisode + 1 : null;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">{title}</h1>
-      <Suspense>
-        <VideoSourceForm />
-      </Suspense>
-      <div className="bg-black rounded shadow">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="mb-4 sm:mb-6">
+        <BackButton />
+      </div>
+
+      <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 break-words">
+        {title}
+      </h1>
+
+      <div className="mb-4 sm:mb-6">
+        <Suspense>
+          <VideoSourceForm />
+        </Suspense>
+      </div>
+
+      <div className="bg-black rounded-lg shadow-lg overflow-hidden">
         {src ? (
           <VideoPlayer
             src={src}
@@ -62,22 +73,27 @@ export default async function WatchPage({
           />
         ) : trailerUrl ? (
           <iframe
-            className="w-full aspect-video rounded"
+            className="w-full aspect-video rounded-lg"
             src={trailerUrl}
             title={`${title} — Trailer`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
         ) : (
-          <div className="p-6 text-white">
+          <div className="p-4 sm:p-6 text-white text-sm sm:text-base">
             No source provided. Append ?src=YOUR_VIDEO_URL
           </div>
         )}
       </div>
 
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         {prevEpisode ? (
-          <Button variant="secondary" size="sm" asChild>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full sm:w-auto min-w-[120px]"
+            asChild
+          >
             <Link
               href={`/watch/${encodeURIComponent(
                 params.animeId
@@ -85,15 +101,15 @@ export default async function WatchPage({
                 src ? `?src=${encodeURIComponent(src)}` : ""
               }`}
             >
-              ← Prev
+              ← Previous
             </Link>
           </Button>
         ) : (
-          <span />
+          <div className="w-full sm:w-auto" />
         )}
 
         {nextEpisode ? (
-          <Button size="sm" asChild>
+          <Button size="sm" className="w-full sm:w-auto min-w-[120px]" asChild>
             <Link
               href={`/watch/${encodeURIComponent(
                 params.animeId

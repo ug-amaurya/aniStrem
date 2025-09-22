@@ -287,6 +287,7 @@
 // }
 // app/anime/[id]/page.tsx (server component)
 import AnimePageServer from "./AnimePageServer";
+import AnimePageLoading from "@/components/AnimePageLoading";
 import { Suspense } from "react";
 
 export default function AnimePageWrapper({
@@ -295,13 +296,7 @@ export default function AnimePageWrapper({
   params: { id: string };
 }) {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center items-center h-64">
-          <div className="loader"></div>
-        </div>
-      }
-    >
+    <Suspense fallback={<AnimePageLoading />}>
       <AnimePageServer params={params} />
     </Suspense>
   );

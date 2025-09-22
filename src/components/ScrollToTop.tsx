@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ArrowUp } from "lucide-react";
 
 export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);
@@ -32,7 +33,7 @@ export default function ScrollToTop() {
       aria-label="Scroll to top"
       className="fixed bottom-6 right-6 z-50"
     >
-      ↑
+      Scroll to top <ArrowUp className="w-4 h-4" />
     </Button>
   );
 }

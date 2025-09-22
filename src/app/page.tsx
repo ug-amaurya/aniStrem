@@ -56,18 +56,18 @@ export default async function Page({
       <h1 className="text-3xl font-bold mb-4">
         {q ? `Results for "${q}"` : "All Anime"}
       </h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+        {items.map((a: any) => (
+          <AnimeCard key={a.id} anime={a} />
+        ))}
+      </div>
       <PaginationControls
         page={page}
         hasNext={hasNext}
         lastPage={lastPage}
         q={q}
       />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {items.map((a: any) => (
-          <AnimeCard key={a.id} anime={a} />
-        ))}
-      </div>
     </section>
   );
 }

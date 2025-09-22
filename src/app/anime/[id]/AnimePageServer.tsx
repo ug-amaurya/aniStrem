@@ -1,5 +1,6 @@
 import Link from "next/link";
 import WatchlistButton from "@/components/WatchlistButton";
+import BackButton from "@/components/BackButton";
 async function fetchAnimeDetails(malId: string) {
   const res = await fetch(
     `https://api.jikan.moe/v4/anime/${encodeURIComponent(malId)}/full`,
@@ -74,6 +75,7 @@ export default async function AnimePageServer({
   let reviews: any[] = [];
 
   try {
+    // Add a small delay to ensure loading state is visible
     const [details, eps, rel, recs, revs] = await Promise.all([
       fetchAnimeDetails(p.id).catch(() => null),
       fetchAnimeEpisodes(p.id).catch(() => []),
@@ -87,11 +89,31 @@ export default async function AnimePageServer({
     relations = rel;
     recommendations = recs;
     reviews = revs;
-  } catch {
+  } catch (error) {
+    console.error("Error fetching anime data:", error);
     anime = null;
   }
 
-  if (!anime) return <div>Anime not found</div>;
+  if (!anime) {
+    return (
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            Anime Not Found
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            The anime you're looking for doesn't exist or couldn't be loaded.
+          </p>
+          <a
+            href="/"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go Home
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   const imageUrl =
     anime.images?.jpg?.image_url || anime.images?.webp?.image_url;
@@ -106,46 +128,64 @@ export default async function AnimePageServer({
       : null;
 
   return (
-    <div>
-      <div className="flex gap-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="mb-4 sm:mb-6">
+        <BackButton />
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
         {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-48 rounded shadow object-cover"
-          />
+          <div className="flex-shrink-0 mx-auto sm:mx-0">
+            <img
+              src={imageUrl}
+              alt={title}
+              className="w-48 sm:w-56 md:w-64 lg:w-72 rounded-lg shadow-lg object-cover"
+            />
+          </div>
         )}
-        <div>
-          <h1 className="text-2xl font-bold">{title}</h1>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold break-words">
+            {title}
+          </h1>
           {genres.length ? (
-            <p className="text-sm text-gray-600">{genres.join(" · ")}</p>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-2 break-words">
+              {genres.join(" · ")}
+            </p>
           ) : null}
           {description ? (
-            <p className="mt-4 whitespace-pre-line">{description}</p>
+            <p className="mt-4 text-sm sm:text-base whitespace-pre-line break-words">
+              {description}
+            </p>
           ) : null}
 
-          <div className="mt-4">
+          <div className="mt-4 sm:mt-6">
             <WatchlistButton animeId={p.id} />
           </div>
         </div>
       </div>
 
       {seasonLabel ? (
-        <div className="mt-4 text-sm text-gray-700">Season: {seasonLabel}</div>
+        <div className="mt-4 sm:mt-6 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+          Season: {seasonLabel}
+        </div>
       ) : null}
 
-      <section className="mt-8">
-        <h2 className="text-xl font-semibold mb-3">Episodes</h2>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <section className="mt-8 sm:mt-10">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6">
+          Episodes
+        </h2>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
           {episodes.map((ep: any) => (
             <li
               key={ep.mal_id}
-              className="flex items-center justify-between bg-white dark:bg-gray-900 p-3 rounded shadow-sm"
+              className="flex flex-col sm:flex-row sm:items-center justify-between bg-white dark:bg-gray-900 p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
-              <div>
-                <div className="font-medium">Episode {ep.mal_id}</div>
+              <div className="flex-1 min-w-0 mb-2 sm:mb-0">
+                <div className="font-medium text-sm sm:text-base">
+                  Episode {ep.mal_id}
+                </div>
                 {ep.title ? (
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-words">
                     {ep.title}
                   </div>
                 ) : null}
@@ -155,7 +195,7 @@ export default async function AnimePageServer({
                   href={`/watch/${encodeURIComponent(
                     p.id
                   )}/${encodeURIComponent(ep.mal_id)}`}
-                  className="px-3 py-1 rounded bg-blue-600 text-white dark:text-gray-900 text-sm"
+                  className="px-3 py-1.5 sm:py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white dark:text-gray-900 text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto text-center"
                 >
                   Watch
                 </Link>
@@ -167,20 +207,24 @@ export default async function AnimePageServer({
 
       {/* Related / Franchise entries */}
       {relations.length > 0 ? (
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold mb-3">Related</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <section className="mt-8 sm:mt-10">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6">
+            Related
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {relations.map((group: any, idx: number) => (
               <div
                 key={`${group.relation}-${idx}`}
-                className="bg-white dark:bg-gray-900 rounded p-3 shadow-sm"
+                className="bg-white dark:bg-gray-900 rounded-lg p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="font-medium mb-2">{group.relation}</div>
-                <ul className="space-y-1">
+                <div className="font-medium mb-3 text-sm sm:text-base">
+                  {group.relation}
+                </div>
+                <ul className="space-y-2">
                   {(group.entry || []).map((e: any) => (
                     <li key={e.mal_id}>
                       <Link
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-blue-600 dark:text-blue-400 hover:underline text-sm sm:text-base break-words block"
                         href={`/anime/${encodeURIComponent(String(e.mal_id))}`}
                       >
                         {e.name}
@@ -196,9 +240,11 @@ export default async function AnimePageServer({
 
       {/* Recommendations */}
       {recommendations.length > 0 ? (
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold mb-3">Recommended</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <section className="mt-8 sm:mt-10">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6">
+            Recommended
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
             {recommendations
               .slice()
               .sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
@@ -213,17 +259,21 @@ export default async function AnimePageServer({
                   <Link
                     key={`${rid}-${rtitle}`}
                     href={`/anime/${encodeURIComponent(rid)}`}
-                    className="block bg-white dark:bg-gray-900 rounded overflow-hidden shadow hover:shadow-lg transition"
+                    className="block bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 group"
                   >
                     {rimg ? (
                       <img
                         src={rimg}
                         alt={rtitle}
-                        className="w-full h-40 object-cover"
+                        className="w-full h-32 sm:h-36 md:h-40 object-cover group-hover:scale-105 transition-transform duration-200"
                       />
-                    ) : null}
-                    <div className="p-3">
-                      <div className="font-medium text-sm truncate">
+                    ) : (
+                      <div className="w-full h-32 sm:h-36 md:h-40 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <span className="text-gray-400 text-xs">No Image</span>
+                      </div>
+                    )}
+                    <div className="p-2 sm:p-3">
+                      <div className="font-medium text-xs sm:text-sm truncate leading-tight">
                         {rtitle}
                       </div>
                     </div>
@@ -236,9 +286,11 @@ export default async function AnimePageServer({
 
       {/* Reviews */}
       {reviews.length > 0 ? (
-        <section className="mt-8">
-          <h2 className="text-xl font-semibold mb-3">Reviews</h2>
-          <ul className="space-y-3">
+        <section className="mt-8 sm:mt-10">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6">
+            Reviews
+          </h2>
+          <ul className="space-y-4 sm:space-y-6">
             {reviews
               .slice()
               .sort(
@@ -256,17 +308,19 @@ export default async function AnimePageServer({
                 return (
                   <li
                     key={`${user}-${rev.date || rev.mal_id || Math.random()}`}
-                    className="bg-white dark:bg-gray-900 p-4 rounded shadow-sm"
+                    className="bg-white dark:bg-gray-900 p-4 sm:p-5 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium">{user}</div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+                      <div className="font-medium text-sm sm:text-base break-words">
+                        {user}
+                      </div>
                       {score ? (
-                        <div className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800">
+                        <div className="text-xs px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800 w-fit">
                           Score: {score}
                         </div>
                       ) : null}
                     </div>
-                    <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-line">
+                    <p className="text-xs sm:text-sm text-gray-800 dark:text-gray-200 whitespace-pre-line break-words leading-relaxed">
                       {excerpt || "No review text."}
                     </p>
                   </li>

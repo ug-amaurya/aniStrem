@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import AnimeCard from "../../components/AnimeCard";
+import BackButton from "../../components/BackButton";
 
 type SimpleAnime = {
   id: string;
@@ -79,6 +80,9 @@ export default function MyListPage() {
 
   return (
     <section>
+      <div className="mb-6">
+        <BackButton />
+      </div>
       <h1 className="text-3xl font-bold mb-6">My List</h1>
       {loading ? (
         <div>Loading…</div>

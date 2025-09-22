@@ -3,14 +3,7 @@
 import Link from "next/link";
 import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function PaginationControls({
   page,
@@ -33,51 +26,100 @@ export default function PaginationControls({
     [q]
   );
 
+  // Generate page numbers with ellipsis logic
+  const generatePageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisiblePages = 7; // Show up to 7 page numbers
+
+    if (lastPage <= maxVisiblePages) {
+      // If total pages is less than max visible, show all
+      for (let i = 1; i <= lastPage; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+
+      if (page <= 4) {
+        // Current page is near the beginning
+        for (let i = 2; i <= 5; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(lastPage);
+      } else if (page >= lastPage - 3) {
+        // Current page is near the end
+        pages.push("...");
+        for (let i = lastPage - 4; i <= lastPage; i++) {
+          pages.push(i);
+        }
+      } else {
+        // Current page is in the middle
+        pages.push("...");
+        for (let i = page - 1; i <= page + 1; i++) {
+          pages.push(i);
+        }
+        pages.push("...");
+        pages.push(lastPage);
+      }
+    }
+
+    return pages;
+  };
+
+  const pageNumbers = generatePageNumbers();
+
   return (
-    <div className="flex items-center justify-end gap-6 mb-6">
-      <div>
-        {page > 1 ? (
-          <Button asChild variant="secondary" size="sm">
-            <Link href={buildHref(page - 1)}>Prev</Link>
-          </Button>
-        ) : (
-          <span />
-        )}
+    <div className="flex items-center justify-center gap-2 mb-6">
+      {/* Previous Button */}
+      {page > 1 ? (
+        <Button asChild variant="outline" size="sm">
+          <Link href={buildHref(page - 1)} className="flex items-center gap-1">
+            <ChevronLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Prev</span>
+          </Link>
+        </Button>
+      ) : (
+        <Button variant="outline" size="sm" disabled>
+          <ChevronLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Prev</span>
+        </Button>
+      )}
+
+      {/* Page Numbers */}
+      <div className="flex items-center gap-1">
+        {pageNumbers.map((pageNum, index) => (
+          <div key={index}>
+            {pageNum === "..." ? (
+              <span className="px-3 py-2 text-gray-500">...</span>
+            ) : (
+              <Button
+                asChild
+                variant={pageNum === page ? "default" : "outline"}
+                size="sm"
+                className="min-w-[40px]"
+              >
+                <Link href={buildHref(pageNum as number)}>{pageNum}</Link>
+              </Button>
+            )}
+          </div>
+        ))}
       </div>
-      <div className="flex items-center gap-2">
-        <label htmlFor="pageSelect" className="text-sm text-gray-600">
-          Page
-        </label>
-        <Select
-          defaultValue={String(page)}
-          onValueChange={(v) => {
-            window.location.href = buildHref(Number(v));
-          }}
-        >
-          <SelectTrigger id="pageSelect" className="w-28">
-            <SelectValue placeholder="Page" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {Array.from(
-                { length: Math.min(lastPage, 100) },
-                (_, i) => i + 1
-              ).map((p) => (
-                <SelectItem key={p} value={String(p)}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        {hasNext ? (
-          <Button asChild size="sm">
-            <Link href={buildHref(page + 1)}>Next</Link>
-          </Button>
-        ) : null}
-      </div>
+
+      {/* Next Button */}
+      {hasNext ? (
+        <Button asChild variant="outline" size="sm">
+          <Link href={buildHref(page + 1)} className="flex items-center gap-1">
+            <span className="hidden sm:inline">Next</span>
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      ) : (
+        <Button variant="outline" size="sm" disabled>
+          <span className="hidden sm:inline">Next</span>
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
