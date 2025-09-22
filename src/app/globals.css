@@ -151,7 +151,7 @@
 
 /* Dark mode override */
 .dark {
-  --color-background: oklch(0.145 0 0);
+  --color-background: #101828;
   --color-foreground: oklch(0.985 0 0);
   --color-primary: oklch(0.922 0 0);
   --color-primary-foreground: oklch(0.205 0 0);
@@ -185,7 +185,7 @@
   }
 }
 .loader {
-  color: #000;
+  color: #0f1328;
   width: 6px;
   aspect-ratio: 1;
   border-radius: 50%;

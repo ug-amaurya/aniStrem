@@ -108,7 +108,6 @@ export default async function AnimePageServer({
   return (
     <div>
       <div className="flex gap-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         {imageUrl && (
           <img
             src={imageUrl}
@@ -141,12 +140,14 @@ export default async function AnimePageServer({
           {episodes.map((ep: any) => (
             <li
               key={ep.mal_id}
-              className="flex items-center justify-between bg-white p-3 rounded shadow-sm"
+              className="flex items-center justify-between bg-white dark:bg-gray-900 p-3 rounded shadow-sm"
             >
               <div>
                 <div className="font-medium">Episode {ep.mal_id}</div>
                 {ep.title ? (
-                  <div className="text-xs text-gray-500">{ep.title}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {ep.title}
+                  </div>
                 ) : null}
               </div>
               <div className="flex items-center gap-2">
@@ -154,7 +155,7 @@ export default async function AnimePageServer({
                   href={`/watch/${encodeURIComponent(
                     p.id
                   )}/${encodeURIComponent(ep.mal_id)}`}
-                  className="px-3 py-1 rounded bg-blue-600 text-white text-sm"
+                  className="px-3 py-1 rounded bg-blue-600 text-white dark:text-gray-900 text-sm"
                 >
                   Watch
                 </Link>
@@ -172,14 +173,14 @@ export default async function AnimePageServer({
             {relations.map((group: any, idx: number) => (
               <div
                 key={`${group.relation}-${idx}`}
-                className="bg-white rounded p-3 shadow-sm"
+                className="bg-white dark:bg-gray-900 rounded p-3 shadow-sm"
               >
                 <div className="font-medium mb-2">{group.relation}</div>
                 <ul className="space-y-1">
                   {(group.entry || []).map((e: any) => (
                     <li key={e.mal_id}>
                       <Link
-                        className="text-blue-600 hover:underline"
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
                         href={`/anime/${encodeURIComponent(String(e.mal_id))}`}
                       >
                         {e.name}
@@ -212,10 +213,9 @@ export default async function AnimePageServer({
                   <Link
                     key={`${rid}-${rtitle}`}
                     href={`/anime/${encodeURIComponent(rid)}`}
-                    className="block bg-white rounded overflow-hidden shadow hover:shadow-lg transition"
+                    className="block bg-white dark:bg-gray-900 rounded overflow-hidden shadow hover:shadow-lg transition"
                   >
                     {rimg ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={rimg}
                         alt={rtitle}
@@ -256,17 +256,17 @@ export default async function AnimePageServer({
                 return (
                   <li
                     key={`${user}-${rev.date || rev.mal_id || Math.random()}`}
-                    className="bg-white p-4 rounded shadow-sm"
+                    className="bg-white dark:bg-gray-900 p-4 rounded shadow-sm"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="font-medium">{user}</div>
                       {score ? (
-                        <div className="text-xs px-2 py-0.5 rounded bg-gray-100">
+                        <div className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800">
                           Score: {score}
                         </div>
                       ) : null}
                     </div>
-                    <p className="text-sm text-gray-800 whitespace-pre-line">
+                    <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-line">
                       {excerpt || "No review text."}
                     </p>
                   </li>
