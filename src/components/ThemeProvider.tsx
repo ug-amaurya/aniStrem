@@ -40,6 +40,13 @@ export default function RootLayoutClient({
 
   return (
     <html lang="en">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2495203542622620"
+          crossOrigin="anonymous"
+        ></script>
+      </head>
       <body>
         <header className="bg-white dark:bg-gray-900 shadow transition-colors duration-300">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4">

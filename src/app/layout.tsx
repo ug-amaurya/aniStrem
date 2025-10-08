@@ -5,8 +5,9 @@ import { Suspense } from "react";
 export const metadata = {
   title: "Watch with Senpai",
   description: "Watch Anime Online",
-  name: "google-adsense-account",
-  content: "ca-pub-2495203542622620",
+  other: {
+    "google-adsense-account": "ca-pub-2495203542622620",
+  },
 };
 
 export default function RootLayout({
