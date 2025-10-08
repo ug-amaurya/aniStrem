@@ -6,6 +6,8 @@ import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Button } from "@/components/ui/button";
+import Modal from "@/components/ui/modal";
+import AnimeFilters from "@/components/AnimeFilters";
 
 export default function RootLayoutClient({
   children,
@@ -31,6 +33,10 @@ export default function RootLayoutClient({
     localStorage.setItem("theme", newTheme);
   };
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const openFilters = () => setShowFilters(true);
+  const closeFilters = () => setShowFilters(false);
 
   return (
     <html lang="en">
@@ -47,7 +53,7 @@ export default function RootLayoutClient({
 
             {/* Center: Search bar (desktop only) */}
             <div className="hidden md:flex flex-1 items-center justify-center">
-              <SearchBar />
+              <SearchBar onOpenFilters={openFilters} />
             </div>
 
             {/* Right section */}
@@ -92,7 +98,7 @@ export default function RootLayoutClient({
           {/* Mobile nav (collapsible) */}
           {mobileOpen && (
             <div className="md:hidden px-4 pb-4 space-y-4 animate-fade-in">
-              <SearchBar />
+              <SearchBar onOpenFilters={openFilters} />
               <nav className="flex flex-col space-y-2 text-sm">
                 <Link href="/" className="text-gray-900 dark:text-white">
                   Home
@@ -107,6 +113,11 @@ export default function RootLayoutClient({
 
         <main className="container mx-auto px-4 py-8">{children}</main>
         <ScrollToTop />
+
+        {/* Filter Modal */}
+        <Modal isOpen={showFilters} onClose={closeFilters} title="Filter Anime">
+          <AnimeFilters onApply={closeFilters} />
+        </Modal>
       </body>
     </html>
   );

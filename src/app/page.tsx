@@ -2,15 +2,33 @@ import AnimeCard from "../components/AnimeCard";
 import Link from "next/link";
 import PaginationControls from "@/components/PaginationControls";
 
-async function fetchAnimeList(page: number, limit: number = 24, q?: string) {
+async function fetchAnimeList(
+  page: number,
+  limit: number = 24,
+  q?: string,
+  filters?: {
+    genres?: string;
+    type?: string;
+    status?: string;
+    year?: string;
+  }
+) {
   const params = new URLSearchParams();
   params.set("page", String(page));
   params.set("limit", String(limit));
-  if (q && q.trim()) params.set("q", q.trim());
-  if (!q) {
+
+  if (q && q.trim()) {
+    params.set("q", q.trim());
+  } else {
     params.set("order_by", "members");
     params.set("sort", "desc");
   }
+
+  // Add filter parameters
+  if (filters?.genres) params.set("genres", filters.genres);
+  if (filters?.type) params.set("type", filters.type);
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.year) params.set("year", filters.year);
 
   const url = `https://api.jikan.moe/v4/anime?${params.toString()}`;
 
@@ -24,6 +42,9 @@ async function fetchAnimeList(page: number, limit: number = 24, q?: string) {
       description: a.synopsis,
       cover: a.images?.jpg?.image_url || a.images?.webp?.image_url,
       genres: (a.genres || []).map((g: any) => g.name),
+      year: a.year,
+      type: a.type,
+      status: a.status,
     }))
     .sort((a: any, b: any) => b.title.localeCompare(a.title));
   const hasNext = Boolean(json?.pagination?.has_next_page);
@@ -49,7 +70,18 @@ export default async function Page({
 
   const page = Number(sp?.page ?? 1) || 1;
   const q = (sp?.q as string) || "";
-  const { items, hasNext, lastPage } = await fetchAnimeList(page, 24, q);
+  const filters = {
+    genres: (sp?.genres as string) || "",
+    type: (sp?.type as string) || "",
+    status: (sp?.status as string) || "",
+    year: (sp?.year as string) || "",
+  };
+  const { items, hasNext, lastPage } = await fetchAnimeList(
+    page,
+    24,
+    q,
+    filters
+  );
 
   return (
     <section>
@@ -67,6 +99,7 @@ export default async function Page({
         hasNext={hasNext}
         lastPage={lastPage}
         q={q}
+        filters={filters}
       />
     </section>
   );

@@ -329,6 +329,20 @@ export default async function AnimePageServer({
           </ul>
         </section>
       ) : null}
+
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-2495203542622620"
+        data-ad-slot="1000000000"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(window.adsbygoogle = window.adsbygoogle || []).push({});`,
+        }}
+      ></script>
     </div>
   );
 }

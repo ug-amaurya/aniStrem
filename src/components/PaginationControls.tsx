@@ -10,20 +10,34 @@ export default function PaginationControls({
   hasNext,
   lastPage,
   q,
+  filters,
 }: {
   page: number;
   hasNext: boolean;
   lastPage: number;
   q: string;
+  filters?: {
+    genres?: string;
+    type?: string;
+    status?: string;
+    year?: string;
+  };
 }) {
   const buildHref = useCallback(
     (targetPage: number) => {
       const p = new URLSearchParams();
       p.set("page", String(targetPage));
       if (q.trim()) p.set("q", q.trim());
+
+      // Add filter parameters
+      if (filters?.genres) p.set("genres", filters.genres);
+      if (filters?.type) p.set("type", filters.type);
+      if (filters?.status) p.set("status", filters.status);
+      if (filters?.year) p.set("year", filters.year);
+
       return `/?${p.toString()}`;
     },
-    [q]
+    [q, filters]
   );
 
   // Generate page numbers with ellipsis logic

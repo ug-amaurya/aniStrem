@@ -5,7 +5,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function SearchBar() {
+interface SearchBarProps {
+  onOpenFilters?: () => void;
+}
+
+export default function SearchBar({ onOpenFilters }: SearchBarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,17 +38,25 @@ export default function SearchBar() {
   );
 
   return (
-    <form onSubmit={submit} className="relative w-full max-w-sm">
-      <Input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search anime..."
-      />
-      <div className="absolute right-1 top-1/2 -translate-y-1/2">
-        <Button type="submit" size="sm">
-          Search
+    <div className="w-full max-w-4xl flex items-center">
+      <form onSubmit={submit} className="flex w-full max-w-sm mx-auto gap-3">
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search anime..."
+        />
+        <div className="flex ">
+          <Button type="submit" size="sm">
+            Search
+          </Button>
+        </div>
+      </form>
+
+      <div className="flex justify-center">
+        <Button variant="outline" onClick={onOpenFilters} className="text-sm">
+          Filters
         </Button>
       </div>
-    </form>
+    </div>
   );
 }
