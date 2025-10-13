@@ -1,4 +1,3 @@
-// app/RootLayoutClient.tsx (client)
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/ui/modal";
 import AnimeFilters from "@/components/AnimeFilters";
 
-export default function RootLayoutClient({
+export default function ThemeProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -48,12 +47,18 @@ export default function RootLayoutClient({
         ></script>
       </head>
       <body>
-        <header className="bg-white dark:bg-gray-900 shadow transition-colors duration-300">
+        <header
+          className={`${
+            theme === "dark" ? "bg-gray-900" : "bg-white"
+          } shadow transition-colors duration-300`}
+        >
           <div className="container mx-auto px-4 py-4 flex items-center justify-between gap-4">
             {/* Left: Logo */}
             <Link
               href="/"
-              className="font-bold text-xl text-gray-900 dark:text-white"
+              className={`font-bold text-xl ${
+                theme === "dark" ? "text-white" : "text-gray-900"
+              }`}
             >
               Watch with Senpai
             </Link>
@@ -71,23 +76,42 @@ export default function RootLayoutClient({
                   asChild
                   variant="ghost"
                   size="sm"
-                  className="text-gray-900 dark:text-white"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
                 >
                   <Link href="/">Home</Link>
                 </Button>
                 <Button
                   asChild
                   size="sm"
-                  className="text-gray-900 dark:text-white"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
                 >
                   <Link href="/mylist">My List</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
+                >
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  <Link href="/signup">Sign Up</Link>
                 </Button>
               </nav>
 
               {/* Theme toggle */}
               <button
                 onClick={toggleTheme}
-                className="px-3 py-2 rounded bg-accent dark:bg-accent-dark text-foreground dark:text-foreground-dark transition-colors"
+                className="px-3 py-2 rounded transition-colors"
+                style={{
+                  backgroundColor: "var(--color-accent)",
+                  color: "var(--color-accent-foreground)",
+                }}
               >
                 {theme === "dark" ? "☀️" : "🌙"}
               </button>
@@ -95,7 +119,9 @@ export default function RootLayoutClient({
               {/* Hamburger (mobile only) */}
               <button
                 onClick={() => setMobileOpen((prev) => !prev)}
-                className="md:hidden p-2 text-gray-900 dark:text-white"
+                className={`md:hidden p-2 ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}
               >
                 {mobileOpen ? "✖" : "☰"}
               </button>
@@ -107,11 +133,29 @@ export default function RootLayoutClient({
             <div className="md:hidden px-4 pb-4 space-y-4 animate-fade-in">
               <SearchBar onOpenFilters={openFilters} />
               <nav className="flex flex-col space-y-2 text-sm">
-                <Link href="/" className="text-gray-900 dark:text-white">
+                <Link
+                  href="/"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
+                >
                   Home
                 </Link>
-                <Link href="/mylist" className="text-gray-900 dark:text-white">
+                <Link
+                  href="/mylist"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
+                >
                   My List
+                </Link>
+                <Link
+                  href="/login"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  className={theme === "dark" ? "text-white" : "text-gray-900"}
+                >
+                  Sign Up
                 </Link>
               </nav>
             </div>

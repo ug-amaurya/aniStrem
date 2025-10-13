@@ -1,8 +1,5 @@
 @import "tailwindcss";
-
-@plugin "tailwindcss-animate";
-
-@custom-variant dark (&:is(.dark *));
+@import "../styles/auth.scss";
 /*
 @theme inline {
   --color-background: var(--background);
