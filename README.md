@@ -8,11 +8,32 @@ Minimal example with dynamic routes for anime details and episode watching, Tail
    ```bash
    npm install
    ```
-2. Run dev server:
+
+2. Configure environment variables:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Then edit `.env.local` and add your MongoDB URI and other configuration values.
+   See [MONGODB_SETUP.md](MONGODB_SETUP.md) for detailed MongoDB Atlas setup instructions.
+
+3. Run dev server:
    ```bash
    npm run dev
    ```
-3. Open `http://localhost:3000`.
+
+4. Open `http://localhost:3000`.
+
+## Database Setup
+
+This application uses **MongoDB** with **Mongoose ODM** for data persistence.
+
+### Quick Setup:
+1. Create a free MongoDB Atlas account at https://www.mongodb.com/atlas
+2. Create a new cluster and database user
+3. Get your connection string
+4. Add it to `.env.local` as `MONGODB_URI`
+
+For detailed step-by-step instructions, see [MONGODB_SETUP.md](MONGODB_SETUP.md).
 
 ## Structure
 
