@@ -1,17 +1,22 @@
-import { connectToDatabase } from "./mongodb";
 import User, { IUser } from "./models/User";
 import Anime from "./models/Anime";
 import Episode from "./models/Episode";
 import mongoose from "mongoose";
 
-// Connect to MongoDB
+// Connect to MongoDB using Mongoose
 export async function connectDB() {
   try {
+    // Check if already connected
     if (mongoose.connections[0].readyState) {
       return;
     }
 
-    await mongoose.connect(process.env.MONGODB_URI!);
+    // Verify MongoDB URI is configured
+    if (!process.env.MONGODB_URI) {
+      throw new Error("Please add your MongoDB URI to .env.local");
+    }
+
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB Atlas");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
